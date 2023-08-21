@@ -39,7 +39,8 @@ def draw(screen: pygame.Surface, grid: list[list[Node]], r: int, w: int) -> None
     draw_grid(screen, r, w)
     
     screen.blit(settings.RESET_TEXT, (settings.SIM_WIDTH + 20, settings.HEIGHT - settings.RESET_TEXT.get_height()))
-    screen.blit(settings.START_TEXT, (settings.SIM_WIDTH + 20, settings.HEIGHT - 2 * settings.START_TEXT.get_height()))
+    screen.blit(settings.RESET_GRID_TEXT, (settings.SIM_WIDTH + 20, settings.HEIGHT - 2 * settings.RESET_GRID_TEXT.get_height()))
+    screen.blit(settings.START_TEXT, (settings.SIM_WIDTH + 20, settings.HEIGHT - 3 * settings.START_TEXT.get_height()))
     
     
     move_count_text = settings.H1_FONT.render(f"Move count : {settings.MOVE_COUNT}", True, settings.BLACK)
@@ -64,7 +65,7 @@ def reset_all_grid(grid: list[list[Node]]) -> None:
         for node in row:
             node.set_state(NodeState.WALKABLE)
             
-def reset_grig(grid: list[list[Node]]) -> None:
+def reset_grid(grid: list[list[Node]]) -> None:
     for row in grid:
         for node in row:
             if not node.state in (NodeState.START, NodeState.END, NodeState.BOUND):
@@ -86,12 +87,6 @@ def main(screen: pygame.Surface, w: int) -> None:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-                
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:
-                    start = None
-                    end = None
-                    reset_all_grid(grid)
                 
             if not started:
                 if pygame.mouse.get_pressed()[0] and pygame.mouse.get_pos()[0] < settings.SIM_WIDTH and pygame.mouse.get_pos()[1] < settings.HEIGHT:
@@ -116,8 +111,14 @@ def main(screen: pygame.Surface, w: int) -> None:
                         end = None
                         
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    start = None
+                    end = None
+                    reset_all_grid(grid)
+                if event.key == pygame.K_t:
+                    reset_grid(grid)
                 if event.key == pygame.K_SPACE and not started:
-                    reset_grig(grid)
+                    reset_grid(grid)
                     if start and end:
                         for row in grid:
                             for node in row:
@@ -126,7 +127,7 @@ def main(screen: pygame.Surface, w: int) -> None:
                         settings.MOVE_COUNT = 0
                         settings.MOVE_LENGTH = 0
                         
-                        settings.MOVE_COUNT, settings.MOVE_LENGTH = astar_algorithm(lambda: draw(screen, grid, rows, w), grid, start, end)
+                        settings.MOVE_COUNT, settings.MOVE_LENGTH = astar_algorithm(lambda: draw(screen, grid, rows, w), grid, start, end) 
                     
 if __name__ == "__main__":
     main(screen, settings.SIM_WIDTH)

@@ -30,4 +30,5 @@ H1_FONT: pygame.font.Font = pygame.font.SysFont("Arial", 40)
 H2_FONT: pygame.font.Font = pygame.font.SysFont("Arial", 30)
 
 RESET_TEXT = TEXT_FONT.render("R: Reset grid", True, BLACK)
+RESET_GRID_TEXT = TEXT_FONT.render("T: Reset grid without erasing bounds", True, BLACK)
 START_TEXT = TEXT_FONT.render("Space: Start pathfinding", True, BLACK)
